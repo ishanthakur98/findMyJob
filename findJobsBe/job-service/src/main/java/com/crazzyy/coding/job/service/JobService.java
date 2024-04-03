@@ -12,7 +12,7 @@ public interface JobService {
 
     List<Job> editJob(Job job);
 
-    Job fetchById(long id) throws Exception;
+    Job fetchById(String id) throws Exception;
 
-    List<Job> deleteJob(long id);
+    List<Job> deleteJob(String id);
 }

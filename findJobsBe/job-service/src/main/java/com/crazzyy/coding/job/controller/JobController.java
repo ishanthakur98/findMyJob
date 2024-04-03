@@ -46,7 +46,7 @@ public class JobController {
      * - endpoint to fetch Job by id
      */
     @GetMapping("{id}")
-    public ResponseEntity<Job> fetchById(@PathVariable("id") long id) throws Exception {
+    public ResponseEntity<Job> fetchById(@PathVariable("id") String id) throws Exception {
         log.info("inside fetch job by id controller !!!!!!!!!!!!!!");
         return ResponseEntity.ok(jobService.fetchById(id));
     }
@@ -57,9 +57,20 @@ public class JobController {
      * - endpoint to delete Job by id
      */
     @DeleteMapping("{id}")
-    public List<Job> deleteById(@PathVariable("id") long id){
+    public List<Job> deleteById(@PathVariable("id") String id){
         log.info("inside delete job by id controller !!!!!!!!!!!!!!");
         return jobService.deleteJob(id);
     }
+    /*
+     * /job/{id}
+     * - Method Delete
+     * - endpoint to delete Job by id
+     */
+    @PutMapping
+    public List<Job> editById(@RequestBody Job job){
+        log.info("inside edit job by id controller !!!!!!!!!!!!!!");
+        return jobService.editJob(job);
+    }
+
 
 }

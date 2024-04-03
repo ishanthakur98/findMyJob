@@ -27,8 +27,9 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> exception(Exception exception) {
         JobExceptionSchema ex = new JobExceptionSchema();
         ex.setErrorCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        ex.setErrorDescription(exception.getLocalizedMessage());
+        ex.setErrorDescription(exception.getLocalizedMessage() != null ? exception.getLocalizedMessage() : "Something went wrong . Please try again later");
         ex.setLocalDateTime(LocalDateTime.now());
+        log.error("{} ",exception);
         return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
     }
 }
