@@ -36,9 +36,9 @@ public class JobController {
      * - endpoint to add Jobs
      */
     @PostMapping
-    public Job addJob(@RequestBody Job job){
+    public ResponseEntity<Job> addJob(@RequestBody Job job){
         log.info("inside add job controller !!!!!!!!!!!!!!");
-        return jobService.addJob(job);
+        return ResponseEntity.ok(jobService.addJob(job));
     }
     /*
      * /job/{id}
@@ -57,9 +57,9 @@ public class JobController {
      * - endpoint to delete Job by id
      */
     @DeleteMapping("{id}")
-    public List<Job> deleteById(@PathVariable("id") String id){
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id){
         log.info("inside delete job by id controller !!!!!!!!!!!!!!");
-        return jobService.deleteJob(id);
+        return ResponseEntity.ok("Done");
     }
     /*
      * /job/{id}
@@ -67,10 +67,8 @@ public class JobController {
      * - endpoint to delete Job by id
      */
     @PutMapping
-    public List<Job> editById(@RequestBody Job job){
+    public ResponseEntity<String> editById(@RequestBody Job job){
         log.info("inside edit job by id controller !!!!!!!!!!!!!!");
-        return jobService.editJob(job);
+        return ResponseEntity.ok("Done");
     }
-
-
 }

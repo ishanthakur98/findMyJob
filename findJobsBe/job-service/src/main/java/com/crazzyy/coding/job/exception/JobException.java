@@ -1,4 +1,4 @@
-package com.crazzyy.coding.exception;
+package com.crazzyy.coding.job.exception;
 
 import java.time.LocalDateTime;
 

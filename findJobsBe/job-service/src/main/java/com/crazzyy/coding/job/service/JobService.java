@@ -10,9 +10,9 @@ public interface JobService {
 
     Job addJob(Job job);
 
-    List<Job> editJob(Job job);
+    void editJob(Job job);
 
     Job fetchById(String id) throws Exception;
 
-    List<Job> deleteJob(String id);
+    void deleteJob(String id);
 }

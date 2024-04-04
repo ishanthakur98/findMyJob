@@ -1,13 +1,14 @@
 package com.crazzyy.coding.job.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
-@ToString
+@Getter
+@Setter
+//@ToString
 @Builder
 @Document
 public class Job {
@@ -28,4 +29,8 @@ public class Job {
     private String maxExperience;
 
     private String location;
+
+    @DBRef
+//    @JsonIgnore
+    private Company company;
 }

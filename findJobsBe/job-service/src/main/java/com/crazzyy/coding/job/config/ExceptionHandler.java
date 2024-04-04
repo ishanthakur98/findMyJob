@@ -1,6 +1,6 @@
-package com.crazzyy.coding.config;
+package com.crazzyy.coding.job.config;
 
-import com.crazzyy.coding.exception.JobException;
+import com.crazzyy.coding.job.exception.JobException;
 import com.crazzyy.coding.job.model.JobExceptionSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

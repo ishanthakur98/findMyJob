@@ -1,18 +1,15 @@
 package com.crazzyy.coding.job.service.impl;
 
-import com.crazzyy.coding.dao.JobDao;
-import com.crazzyy.coding.exception.JobException;
+import com.crazzyy.coding.job.dao.CompanyDao;
+import com.crazzyy.coding.job.dao.JobDao;
+import com.crazzyy.coding.job.exception.JobException;
+import com.crazzyy.coding.job.model.Company;
 import com.crazzyy.coding.job.model.Job;
 import com.crazzyy.coding.job.service.JobService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -20,8 +17,11 @@ public class JobServiceImpl implements JobService {
 
     JobDao jobDao;
 
-    public JobServiceImpl(JobDao jobDao) {
+    CompanyDao companyDao;
+
+    public JobServiceImpl(JobDao jobDao, CompanyDao companyDao) {
         this.jobDao = jobDao;
+        this.companyDao = companyDao;
     }
 
     @Override
@@ -31,29 +31,59 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job addJob(Job job) {
-        return jobDao.save(job);
-    }
+        if (job.getCompany() == null) {
+            throw new JobException("400", "Company cannot be null");
+        }
 
-    @Override
-    public List<Job> editJob(Job job) {
+        Company company = companyDao.findById(job.getCompany().getId()).orElse(companyDao.save(job.getCompany()));
+        log.info("Company for this job is {} ",company);
+        if (company.getJobs() == null) {
+            company.setJobs(new ArrayList<>());
+        }
+        List<Job> jobList = company.getJobs();
+        jobList.add(job);
+        company.setJobs(jobList);
         jobDao.save(job);
-        return jobDao.findAll();
+
+        companyDao.save(company);
+        return job;
     }
 
     @Override
-    public Job fetchById(String id) throws Exception{
+    public void editJob(Job job) {
+        try {
+            jobDao.findById(job.getId()).orElseThrow(NoSuchElementException::new);
+            jobDao.save(job);
+        } catch (Exception e) {
+            throw new JobException("400", "No job with given id found");
+        }
+
+    }
+
+    @Override
+    public Job fetchById(String id) {
         return jobDao.findById(id).orElseThrow(NoSuchElementException::new);
 
     }
 
     @Override
-    public List<Job> deleteJob(String id) {
+    public void deleteJob(String id) {
         try {
-            jobDao.deleteById(id);
-        }catch (Exception e){
-            throw new JobException("400","No job with given id found");
-        }
+            Job job = jobDao.findById(id).orElseThrow(NoSuchElementException::new);
+            Optional<Company> company = companyDao.findById(job.getCompany().getId());
+            if (company.isPresent()) {
 
-        return jobDao.findAll();
+                Company company1 = company.get();
+                log.info("Company for this job is {} ",company1);
+//                company1.getJobs().remove(job);
+//                companyDao.save(company1);
+            } else {
+                throw new JobException("400", "No company exist for this job");
+            }
+            jobDao.deleteById(id);
+        } catch (Exception e) {
+            log.error("{} ",e);
+            throw new JobException("400", "No job with given id found");
+        }
     }
 }
