@@ -75,8 +75,8 @@ public class JobServiceImpl implements JobService {
 
                 Company company1 = company.get();
                 log.info("Company for this job is {} ",company1);
-//                company1.getJobs().remove(job);
-//                companyDao.save(company1);
+                company1.getJobs().remove(job);
+                companyDao.save(company1);
             } else {
                 throw new JobException("400", "No company exist for this job");
             }
