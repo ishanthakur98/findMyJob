@@ -6,8 +6,10 @@ import com.crazzyy.coding.job.exception.JobException;
 import com.crazzyy.coding.job.model.Company;
 import com.crazzyy.coding.job.model.Job;
 import com.crazzyy.coding.job.service.CompanyService;
+import com.crazzyy.coding.job.service.JobService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     CompanyDao companyDao;
 
-    JobDao jobDao;
+    JobService jobService;
     @Override
     public List<Company> fetchCompany() {
         return companyDao.findAll();
@@ -47,7 +49,7 @@ public class CompanyServiceImpl implements CompanyService {
                 log.info("List of jobs for company {} is {}",company.getName(),jobList);
                 List<String> idList = new ArrayList<>();
                 jobList.forEach(job -> idList.add(job.getId()));
-                jobDao.deleteByIdIn(idList);
+                jobService.deleteIdIn(idList);
 
             }else {
                 log.info("No jobs exist for company {} ",company.getName());

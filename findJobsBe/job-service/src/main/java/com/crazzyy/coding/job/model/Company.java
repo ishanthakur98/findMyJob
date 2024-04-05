@@ -29,5 +29,5 @@ public class Company {
     private List<Job> jobs;
 
     @DBRef
-    private Review review;
+    private List<Review> review;
 }

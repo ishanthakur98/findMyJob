@@ -59,6 +59,7 @@ public class JobController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") String id){
         log.info("inside delete job by id controller !!!!!!!!!!!!!!");
+        jobService.deleteJob(id);
         return ResponseEntity.ok("Done");
     }
     /*
@@ -69,6 +70,7 @@ public class JobController {
     @PutMapping
     public ResponseEntity<String> editById(@RequestBody Job job){
         log.info("inside edit job by id controller !!!!!!!!!!!!!!");
+        jobService.editJob(job);
         return ResponseEntity.ok("Done");
     }
 }

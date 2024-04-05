@@ -58,6 +58,7 @@ public class CompanyController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") String id){
         log.info("inside delete company by id controller !!!!!!!!!!!!!!");
+        companyService.deleteCompany(id);
         return ResponseEntity.ok("Done");
     }
     /*
@@ -68,6 +69,7 @@ public class CompanyController {
     @PutMapping
     public ResponseEntity<String> editById(@RequestBody Company company){
         log.info("inside edit company by id controller !!!!!!!!!!!!!!");
+        companyService.editCompany(company);
         return ResponseEntity.ok("Done");
     }
 

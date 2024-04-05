@@ -15,4 +15,6 @@ public interface JobService {
     Job fetchById(String id) throws Exception;
 
     void deleteJob(String id);
+
+    void deleteIdIn(List<String> id);
 }

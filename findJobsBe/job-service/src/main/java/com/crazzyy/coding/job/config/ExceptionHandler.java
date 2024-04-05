@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @ControllerAdvice
@@ -28,6 +29,16 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         JobExceptionSchema ex = new JobExceptionSchema();
         ex.setErrorCode(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
         ex.setErrorDescription(exception.getLocalizedMessage() != null ? exception.getLocalizedMessage() : "Something went wrong . Please try again later");
+        ex.setLocalDateTime(LocalDateTime.now());
+        log.error("{} ",exception);
+        return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = NoSuchElementException.class)
+    public ResponseEntity<Object> noSuchElement(Exception exception) {
+        JobExceptionSchema ex = new JobExceptionSchema();
+        ex.setErrorCode(String.valueOf(HttpStatus.NO_CONTENT.value()));
+        ex.setErrorDescription("No content found for this request");
         ex.setLocalDateTime(LocalDateTime.now());
         log.error("{} ",exception);
         return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);

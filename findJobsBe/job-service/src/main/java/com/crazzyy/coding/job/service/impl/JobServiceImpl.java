@@ -5,8 +5,12 @@ import com.crazzyy.coding.job.dao.JobDao;
 import com.crazzyy.coding.job.exception.JobException;
 import com.crazzyy.coding.job.model.Company;
 import com.crazzyy.coding.job.model.Job;
+import com.crazzyy.coding.job.service.CompanyService;
 import com.crazzyy.coding.job.service.JobService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,14 +19,12 @@ import java.util.*;
 @Service
 public class JobServiceImpl implements JobService {
 
+    @Autowired
     JobDao jobDao;
 
-    CompanyDao companyDao;
-
-    public JobServiceImpl(JobDao jobDao, CompanyDao companyDao) {
-        this.jobDao = jobDao;
-        this.companyDao = companyDao;
-    }
+    @Lazy
+    @Autowired
+    CompanyService companyService;
 
     @Override
     public List<Job> fetchJobs() {
@@ -35,7 +37,7 @@ public class JobServiceImpl implements JobService {
             throw new JobException("400", "Company cannot be null");
         }
 
-        Company company = companyDao.findById(job.getCompany().getId()).orElse(companyDao.save(job.getCompany()));
+        Company company = companyService.fetchById(job.getCompany().getId());
         log.info("Company for this job is {} ",company);
         if (company.getJobs() == null) {
             company.setJobs(new ArrayList<>());
@@ -45,7 +47,7 @@ public class JobServiceImpl implements JobService {
         company.setJobs(jobList);
         jobDao.save(job);
 
-        companyDao.save(company);
+        companyService.addCompany(company);
         return job;
     }
 
@@ -70,20 +72,19 @@ public class JobServiceImpl implements JobService {
     public void deleteJob(String id) {
         try {
             Job job = jobDao.findById(id).orElseThrow(NoSuchElementException::new);
-            Optional<Company> company = companyDao.findById(job.getCompany().getId());
-            if (company.isPresent()) {
+            Company company = companyService.fetchById(job.getCompany().getId());
+            log.info("Company for this job is {} ",company);
+            company.getJobs().remove(job);
+            companyService.addCompany(company);
 
-                Company company1 = company.get();
-                log.info("Company for this job is {} ",company1);
-                company1.getJobs().remove(job);
-                companyDao.save(company1);
-            } else {
-                throw new JobException("400", "No company exist for this job");
-            }
             jobDao.deleteById(id);
         } catch (Exception e) {
             log.error("{} ",e);
             throw new JobException("400", "No job with given id found");
         }
+    }
+
+    public void deleteIdIn(List<String> id){
+        jobDao.deleteByIdIn(id);
     }
 }

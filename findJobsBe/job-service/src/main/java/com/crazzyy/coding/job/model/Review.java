@@ -19,7 +19,7 @@ public class Review {
 
     private String description;
 
-    private String reviews;
+    private String rating;
 
     @DBRef
     @JsonIgnore

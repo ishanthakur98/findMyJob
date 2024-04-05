@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface ReviewService {
 
-    List<Review> fetchReview();
+    List<Review> fetchReview(String companyId);
 
     Review addReview(Review review);
 
     void editReview(Review review);
 
-    Review fetchById(String id) throws Exception;
+    Review fetchById(String companyId,String id) throws Exception;
 
-    void deleteReview(String id);
+    void deleteReview(String companyId,String id);
 }
